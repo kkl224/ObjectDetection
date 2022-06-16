@@ -20,7 +20,7 @@ while(1):
 
     # Draw edges 
     # cannyframe = cv.Canny(blurframe,100,200)
-    cv.imshow("Canny", cannyframe)
+    # cv.imshow("Canny", cannyframe)
 
     # Apply Hough transform on the blurred image
     circles = cv.HoughCircles(blurframe, cv.HOUGH_GRADIENT, 1.2, 100, param1=60, param2=60, minRadius=1, maxRadius=10)

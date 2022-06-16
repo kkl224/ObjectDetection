@@ -31,16 +31,18 @@ while(1):
     ret, frame = videoCapture.read()
     if not ret: break
 
+    blurframe = cv.medianBlur(frame, 21)
+
     # Set up the detector with default parameters.
     detector = cv.SimpleBlobDetector_create()
 
     # Detect blobs.
-    keypoints = detector.detect(frame)
+    keypoints = detector.detect(blurframe)
 
     blank = np.zeros((1, 1))
 
     # Draw detected blobs as red circles.
-    blobs = cv.drawKeypoints(frame, keypoints, blank, (0,0,255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    blobs = cv.drawKeypoints(blurframe, keypoints, blank, (0,0,255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
     cv.imshow('frame',blobs)
 
