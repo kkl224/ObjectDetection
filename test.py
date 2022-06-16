@@ -22,8 +22,7 @@ params.filterByCircularity = True
 params.minCircularity = 0.5
 
 params.filterByColor = True
-blueLower = (35, 140, 60)
-blueUpper = (255, 255, 180)
+#params.blobClor = 240
 
 # Start a while loop
 while(1):
@@ -32,25 +31,18 @@ while(1):
     ret, frame = videoCapture.read()
     if not ret: break
 
-    mask = cv.inRange(frame, blueLower, blueUpper)
-    mask = cv.erode(mask, None, iterations=0)
-    mask = cv.dilate(mask, None, iterations=0)
-    frame = cv.bitwise_and(frame,frame,mask = mask)
-
     # Set up the detector with default parameters.
-    detector = cv.SimpleBlobDetector_create(params)
+    detector = cv.SimpleBlobDetector_create()
 
     # Detect blobs.
-    keypoints = detector.detect(mask)
+    keypoints = detector.detect(frame)
+
+    blank = np.zeros((1, 1))
 
     # Draw detected blobs as red circles.
-    # cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the size of the circle corresponds to the size of blob
-    im_with_keypoints = cv.drawKeypoints(mask, keypoints, np.array([]), (0,0,255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    blobs = cv.drawKeypoints(frame, keypoints, blank, (0,0,255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-    # Display the resulting frame
-    frame = cv.bitwise_and(frame,im_with_keypoints,mask = mask)
-
-    cv.imshow('frame',frame)
+    cv.imshow('frame',blobs)
 
     # Wait for Esc key to stop
     if cv.waitKey(33) == 27:
