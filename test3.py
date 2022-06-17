@@ -49,7 +49,7 @@ while(1):
 
     blue = cv.bitwise_and(frame, frame, mask=mask)
 
-    lower2 = np.array([50,0,0])
+    lower2 = np.array([50, 0, 0])
     upper2 = np.array([55, 50, 50])
 
     ## mask of blue color
