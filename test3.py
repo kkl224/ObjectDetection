@@ -12,14 +12,14 @@ params.minThreshold = 10
 params.maxThreshold = 220
 # Filter by Inertia Ratio
 params.filterByInertia = True
-params.minInertiaRatio = 0.4
+params.minInertiaRatio = 0.3
 # Filter by Area
 params.filterByArea = True
-params.minArea = 200
+params.minArea = 500
 params.maxArea = 20000
 # Filter by Convexity
 params.filterByConvexity = True
-params.minConvexity = 0.6
+params.minConvexity = 0.7
 # Filter by Circularity
 params.filterByCircularity = True
 params.minCircularity = 0.8
@@ -62,7 +62,7 @@ while(1):
     if blobCount > 0:
 
         text = "Count=" + str(blobCount) 
-        cv.putText(frame, text, (5,25), font, 1, (255, 0, 0), 2)
+        cv.putText(frame, text, (5,25), font, 1, (0, 0, 255), 2)
 
         blank = np.zeros((1, 1))
 
@@ -71,14 +71,14 @@ while(1):
         centroids = cv.drawKeypoints(frame, keypoints, frame, (0, 0, 255), flags=0)
 
         # Write X position of first blob
-        blob_x = keypoints[0].pt[0]
-        text1 = "X=" + "{:.2f}".format(blob_x )
-        cv.putText(frame, text1, (5,50), font, 1, (0, 255, 0), 2)
+        #blob_x = keypoints[0].pt[0]
+        #text1 = "X=" + "{:.2f}".format(blob_x )
+        #cv.putText(frame, text1, (5,50), font, 1, (0, 0, 255), 2)
 
         # Write Y position of first blob
-        blob_y = keypoints[0].pt[1]
-        text2 = "Y=" + "{:.2f}".format(blob_y)
-        cv.putText(frame, text2, (5,75), font, 1, (0, 255, 0), 2)
+        #blob_y = keypoints[0].pt[1]
+        #text2 = "Y=" + "{:.2f}".format(blob_y)
+        #cv.putText(frame, text2, (5,75), font, 1, (0, 0, 255), 2)
 
         plt.imshow(blobs)
         plt.imshow(centroids)
