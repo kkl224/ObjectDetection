@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from skimage import measure
 
 # Capturing video through webcam
-videoCapture = cv.VideoCapture(1)
+videoCapture = cv.VideoCapture(0)
 
 while(1):
 

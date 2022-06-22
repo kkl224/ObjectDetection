@@ -12,17 +12,17 @@ params.minThreshold = 10
 params.maxThreshold = 220
 # Filter by Inertia Ratio
 params.filterByInertia = True
-params.minInertiaRatio = 0.3
+params.minInertiaRatio = 0.5
 # Filter by Area
 params.filterByArea = True
 params.minArea = 500
-params.maxArea = 20000
+params.maxArea = 1000000000
 # Filter by Convexity
 params.filterByConvexity = True
-params.minConvexity = 0.7
+params.minConvexity = 0.3
 # Filter by Circularity
 params.filterByCircularity = True
-params.minCircularity = 0.6
+params.minCircularity = 0.8
 # Filter by Color
 params.filterByColor = True
 params.blobColor = 255
@@ -37,16 +37,16 @@ while(1):
     if not ret: 
         break
 
-    blurframe = cv.medianBlur(frame, 5)
+    blurframe = cv.medianBlur(frame, 9)
 
     hsvframe = cv.cvtColor(blurframe, cv.COLOR_BGR2HSV)
 
-    lower = np.array([70, 80, 50]) #80, 40, 30
+    lower = np.array([80, 90, 20]) #80, 40, 30
     upper = np.array([130, 255, 255]) 
 
     mask = cv.inRange(hsvframe, lower, upper)
     mask = cv.erode(mask, None, iterations=3)
-    mask = cv.dilate(mask, None, iterations=3)
+    mask = cv.dilate(mask, None, iterations=8)
 
     #blue = cv.bitwise_and(frame, frame, mask=mask)
 
@@ -63,6 +63,16 @@ while(1):
         text = "Count=" + str(blobCount) 
         cv.putText(frame, text, (5,25), font, 1, (0, 0, 255), 2)
 
+        # Write X position of first blob
+        blob_x = keypoints[0].pt[0]
+        text1 = "X=" + "{:.2f}".format(blob_x )
+        cv.putText(frame, text1, (5,50), font, 1, (0, 0, 255), 2)
+
+        # Write Y position of first blob
+        blob_y = keypoints[0].pt[1]
+        text2 = "Y=" + "{:.2f}".format(blob_y)
+        cv.putText(frame, text2, (5,75), font, 1, (0, 0, 255), 2)
+
     else: 
         
         text = "Count=0"
@@ -74,18 +84,8 @@ while(1):
     blobs = cv.drawKeypoints(frame, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     centroids = cv.drawKeypoints(frame, keypoints, frame, (0, 0, 255), flags=0)
 
-    # Write X position of first blob
-    #blob_x = keypoints[0].pt[0]
-    #text1 = "X=" + "{:.2f}".format(blob_x )
-    #cv.putText(frame, text1, (5,50), font, 1, (0, 0, 255), 2)
-
-    # Write Y position of first blob
-    #blob_y = keypoints[0].pt[1]
-    #text2 = "Y=" + "{:.2f}".format(blob_y)
-    #cv.putText(frame, text2, (5,75), font, 1, (0, 0, 255), 2)
-
-    plt.imshow(blobs)
-    plt.imshow(centroids)
+    #plt.imshow(blobs)
+    #plt.imshow(centroids)
     cv.imshow('Blobs', blobs)
     cv.imshow('Mask', mask)
 
