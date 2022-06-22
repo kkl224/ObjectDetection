@@ -74,6 +74,15 @@ while(1):
         text2 = "Y=" + "{:.2f}".format(blob_y)
         cv.putText(frame, text2, (5,75), font, 1, (0, 0, 255), 2)
 
+        # Get distance of largest circle
+        my_circle = sorted(keypoints, key=(lambda x: x.size), reverse=True)[0]
+        p = my_circle.size / 2.0    # perceived width, in pixels
+        w = 0.2794          # approx. actual width, in meters (pre-computed)
+        f = 655             # camera focal length, in pixels (pre-computed)
+        d = f * w / p
+        cv.putText(frame, "Distance=%.3fm" % d, (5,100), font, 1, (0, 0, 255), 2)
+        print("Distance=%.3fm" % d)
+
     else: 
         
         text = "Count=0"
