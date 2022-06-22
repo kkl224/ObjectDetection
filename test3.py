@@ -37,6 +37,13 @@ while(1):
     if not ret: 
         break
 
+    # get vcap property 
+    width  = int(videoCapture.get(3))   # int(float `width`)
+    height = int(videoCapture.get(4))  # int(float `height`)
+    
+    cv.line(frame, (0, 0), (width, height), (0, 255, 0), 2)
+    cv.line(frame, (0, height), (width, 0), (0, 255, 0), 2)
+
     blurframe = cv.GaussianBlur(frame, (11,11), 0)
     #blurframe = cv.medianBlur(frame, 9)
 
@@ -62,31 +69,30 @@ while(1):
         # Get the number of blobs found
         blobCount = len(keypoints)
         text = "Count=" + str(blobCount) 
-        cv.putText(frame, text, (5,25), font, 1, (0, 0, 255), 2)
+        cv.putText(frame, text, (5,50), font, 2, (0, 0, 255), 2)
 
         # Write X position of first blob
         blob_x = keypoints[0].pt[0]
         text1 = "X=" + "{:.2f}".format(blob_x )
-        cv.putText(frame, text1, (5,50), font, 1, (0, 0, 255), 2)
+        cv.putText(frame, text1, (5,100), font, 2, (0, 0, 255), 2)
 
         # Write Y position of first blob
         blob_y = keypoints[0].pt[1]
         text2 = "Y=" + "{:.2f}".format(blob_y)
-        cv.putText(frame, text2, (5,75), font, 1, (0, 0, 255), 2)
+        cv.putText(frame, text2, (5,150), font, 2, (0, 0, 255), 2)
 
         # Get distance of largest circle
         my_circle = sorted(keypoints, key=(lambda x: x.size), reverse=True)[0]
         p = my_circle.size / 2.0    # perceived width, in pixels
-        w = 0.2794          # approx. actual width, in meters (pre-computed)
-        f = 655             # camera focal length, in pixels (pre-computed)
+        w = 0.25          # approx. actual width, in meters (pre-computed)
+        f = 1461             # camera focal length, in pixels (pre-computed)
         d = f * w / p
-        cv.putText(frame, "Distance=%.3fm" % d, (5,100), font, 1, (0, 0, 255), 2)
-        print("Distance=%.3fm" % d)
+        cv.putText(frame, "Distance=%.3fm" % d, (5,200), font, 2, (0, 0, 255), 2)
 
     else: 
         
         text = "Count=0"
-        cv.putText(frame, text, (5,25), font, 1, (0, 0, 255), 2)
+        cv.putText(frame, text, (5,25), font, 2, (0, 0, 255), 2)
 
     blank = np.zeros((1, 1))
 
