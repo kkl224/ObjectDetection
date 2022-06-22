@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Capturing video through webcam
-videoCapture = cv.VideoCapture(1)
+videoCapture = cv.VideoCapture(0)
 
 # Setup SimpleBlobDetector parameters.
 params = cv.SimpleBlobDetector_Params()
@@ -28,7 +28,7 @@ params.filterByColor = True
 params.blobColor = 255
 
 # Font to write text overlay
-font = cv.FONT_HERSHEY_SIMPLEX
+font = cv.FONT_HERSHEY_SIMPLE
 
 while(1):
 
@@ -56,10 +56,10 @@ while(1):
     # Detect blobs
     keypoints = detector.detect(mask)
 
-    # Get the number of blobs found
-    blobCount = len(keypoints)
+    if keypoints:
 
-    if blobCount > 0:
+        # Get the number of blobs found
+        blobCount = len(keypoints)
 
         text = "Count=" + str(blobCount) 
         cv.putText(frame, text, (5,25), font, 1, (0, 0, 255), 2)
@@ -68,7 +68,7 @@ while(1):
 
         # Draw detected blobs as red circles
         blobs = cv.drawKeypoints(frame, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        centroids = cv.drawKeypoints(frame, keypoints, frame, (0, 0, 255), flags=0)
+        #centroids = cv.drawKeypoints(frame, keypoints, frame, (0, 0, 255), flags=0)
 
         # Write X position of first blob
         #blob_x = keypoints[0].pt[0]
@@ -80,11 +80,10 @@ while(1):
         #text2 = "Y=" + "{:.2f}".format(blob_y)
         #cv.putText(frame, text2, (5,75), font, 1, (0, 0, 255), 2)
 
-        plt.imshow(blobs)
-        plt.imshow(centroids)
+        #plt.imshow(blobs)
+        #plt.imshow(centroids)
         cv.imshow('Blobs', blobs)
         cv.imshow('Mask', mask)
-        #cv.imshow('Blue', blue)
 
     # Wait for Esc key to stop
     if cv.waitKey(33) == 27:
