@@ -22,13 +22,13 @@ params.filterByConvexity = True
 params.minConvexity = 0.7
 # Filter by Circularity
 params.filterByCircularity = True
-params.minCircularity = 0.8
+params.minCircularity = 0.6
 # Filter by Color
 params.filterByColor = True
 params.blobColor = 255
 
 # Font to write text overlay
-font = cv.FONT_HERSHEY_SIMPLE
+font = cv.FONT_HERSHEY_SIMPLEX
 
 while(1):
 
@@ -60,30 +60,34 @@ while(1):
 
         # Get the number of blobs found
         blobCount = len(keypoints)
-
         text = "Count=" + str(blobCount) 
         cv.putText(frame, text, (5,25), font, 1, (0, 0, 255), 2)
 
-        blank = np.zeros((1, 1))
+    else: 
+        
+        text = "Count=0"
+        cv.putText(frame, text, (5,25), font, 1, (0, 0, 255), 2)
 
-        # Draw detected blobs as red circles
-        blobs = cv.drawKeypoints(frame, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        #centroids = cv.drawKeypoints(frame, keypoints, frame, (0, 0, 255), flags=0)
+    blank = np.zeros((1, 1))
 
-        # Write X position of first blob
-        #blob_x = keypoints[0].pt[0]
-        #text1 = "X=" + "{:.2f}".format(blob_x )
-        #cv.putText(frame, text1, (5,50), font, 1, (0, 0, 255), 2)
+    # Draw detected blobs as red circles
+    blobs = cv.drawKeypoints(frame, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    centroids = cv.drawKeypoints(frame, keypoints, frame, (0, 0, 255), flags=0)
 
-        # Write Y position of first blob
-        #blob_y = keypoints[0].pt[1]
-        #text2 = "Y=" + "{:.2f}".format(blob_y)
-        #cv.putText(frame, text2, (5,75), font, 1, (0, 0, 255), 2)
+    # Write X position of first blob
+    #blob_x = keypoints[0].pt[0]
+    #text1 = "X=" + "{:.2f}".format(blob_x )
+    #cv.putText(frame, text1, (5,50), font, 1, (0, 0, 255), 2)
 
-        #plt.imshow(blobs)
-        #plt.imshow(centroids)
-        cv.imshow('Blobs', blobs)
-        cv.imshow('Mask', mask)
+    # Write Y position of first blob
+    #blob_y = keypoints[0].pt[1]
+    #text2 = "Y=" + "{:.2f}".format(blob_y)
+    #cv.putText(frame, text2, (5,75), font, 1, (0, 0, 255), 2)
+
+    plt.imshow(blobs)
+    plt.imshow(centroids)
+    cv.imshow('Blobs', blobs)
+    cv.imshow('Mask', mask)
 
     # Wait for Esc key to stop
     if cv.waitKey(33) == 27:
