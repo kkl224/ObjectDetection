@@ -37,15 +37,16 @@ while(1):
     if not ret: 
         break
 
-    blurframe = cv.medianBlur(frame, 9)
+    blurframe = cv.GaussianBlur(frame, (11,11), 0)
+    #blurframe = cv.medianBlur(frame, 9)
 
     hsvframe = cv.cvtColor(blurframe, cv.COLOR_BGR2HSV)
 
-    lower = np.array([80, 90, 20]) #80, 40, 30
+    lower = np.array([80, 90, 10]) #80, 40, 30
     upper = np.array([130, 255, 255]) 
 
     mask = cv.inRange(hsvframe, lower, upper)
-    mask = cv.erode(mask, None, iterations=3)
+    mask = cv.erode(mask, None, iterations=4)
     mask = cv.dilate(mask, None, iterations=8)
 
     #blue = cv.bitwise_and(frame, frame, mask=mask)
