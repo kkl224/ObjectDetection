@@ -69,17 +69,17 @@ while(1):
         # Get the number of blobs found
         blobCount = len(keypoints)
         text = "Count=" + str(blobCount) 
-        cv.putText(frame, text, (5,50), font, 2, (0, 0, 255), 2)
+        cv.putText(frame, text, (5,50), font, 1, (0, 0, 255), 2)
 
         # Write X position of first blob 
         blob_x = keypoints[0].pt[0]
         text1 = "X=" + "{:.2f}".format(blob_x )
-        cv.putText(frame, text1, (5,100), font, 2, (0, 0, 255), 2)
+        cv.putText(frame, text1, (5,100), font, 1, (0, 0, 255), 2)
 
         # Write Y position of first blob
         blob_y = keypoints[0].pt[1]
         text2 = "Y=" + "{:.2f}".format(blob_y)
-        cv.putText(frame, text2, (5,150), font, 2, (0, 0, 255), 2)
+        cv.putText(frame, text2, (5,150), font, 1, (0, 0, 255), 2)
 
         # Get distance of largest circle
         my_circle = sorted(keypoints, key=(lambda x: x.size), reverse=True)[0]
@@ -87,7 +87,7 @@ while(1):
         w = 0.31          # approx. actual width, in meters (pre-computed)
         f = 1461             # camera focal length, in pixels (pre-computed)
         d = f * w / p
-        cv.putText(frame, "Distance=%.3fm" % d, (5,200), font, 2, (0, 0, 255), 2)
+        cv.putText(frame, "Distance=%.3fm" % d, (5,200), font, 1, (0, 0, 255), 2)
 
     else: 
         
