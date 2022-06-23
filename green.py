@@ -49,8 +49,11 @@ while(1):
 
     hsvframe = cv.cvtColor(blurframe, cv.COLOR_BGR2HSV)
 
-    lower = np.array([30, 40, 90]) 
-    upper = np.array([70, 255, 255]) 
+    #lower = np.array([30, 40, 90]) 
+    #upper = np.array([70, 255, 255]) 
+
+    lower = (16, 20, 0)
+    upper = (76, 255, 255)
 
     mask = cv.inRange(hsvframe, lower, upper)
     mask = cv.erode(mask, None, iterations=4)
@@ -64,12 +67,12 @@ while(1):
     # Detect blobs
     keypoints = detector.detect(mask)
 
-    if keypoints:
+    # Get the number of blobs found
+    blobCount = len(keypoints)
+    text = "Count=" + str(blobCount) 
+    cv.putText(frame, text, (5,50), font, 1, (0, 0, 255), 2)
 
-        # Get the number of blobs found
-        blobCount = len(keypoints)
-        text = "Count=" + str(blobCount) 
-        cv.putText(frame, text, (5,50), font, 1, (0, 0, 255), 2)
+    if keypoints:
 
         # Write X position of first blob 
         blob_x = keypoints[0].pt[0]
@@ -83,16 +86,11 @@ while(1):
 
         # Get distance of largest circle
         my_circle = sorted(keypoints, key=(lambda x: x.size), reverse=True)[0]
-        p = my_circle.size / 2.0    # perceived width, in pixels
+        p = my_circle.size    # perceived width, in pixels
         w = 0.31          # approx. actual width, in meters (pre-computed)
-        f = 1461             # camera focal length, in pixels (pre-computed)
+        f = 655             # camera focal length, in pixels (pre-computed)
         d = f * w / p
         cv.putText(frame, "Distance=%.3fm" % d, (5,200), font, 1, (0, 0, 255), 2)
-
-    else: 
-        
-        text = "Count=0"
-        cv.putText(frame, text, (5,25), font, 2, (0, 0, 255), 2)
 
     blank = np.zeros((1, 1))
 
