@@ -102,7 +102,7 @@ while(1):
 
     #plt.imshow(blobs)
     #plt.imshow(centroids)
-    #cv.imshow('Green', green)
+    cv.imshow('Green', green)
     cv.imshow('Blobs', blobs)
     cv.imshow('Mask', mask)
 
