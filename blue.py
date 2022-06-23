@@ -22,7 +22,7 @@ params.filterByConvexity = True
 params.minConvexity = 0.3
 # Filter by Circularity
 params.filterByCircularity = True
-params.minCircularity = 0.8
+params.minCircularity = 0.6
 # Filter by Color
 params.filterByColor = True
 params.blobColor = 255
@@ -41,8 +41,8 @@ while(1):
     width  = int(videoCapture.get(3))   # int(float `width`)
     height = int(videoCapture.get(4))  # int(float `height`)
     
-    cv.line(frame, (0, 0), (width, height), (0, 255, 0), 2)
-    cv.line(frame, (0, height), (width, 0), (0, 255, 0), 2)
+    #cv.line(frame, (0, 0), (width, height), (0, 255, 0), 2)
+    #cv.line(frame, (0, height), (width, 0), (0, 255, 0), 2)
 
     blurframe = cv.GaussianBlur(frame, (11,11), 0)
     #blurframe = cv.medianBlur(frame, 9)
