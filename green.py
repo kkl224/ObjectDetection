@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Capturing video through webcam
-videoCapture = cv.VideoCapture(0)
+videoCapture = cv.VideoCapture(1)
 
 # Setup SimpleBlobDetector parameters.
 params = cv.SimpleBlobDetector_Params()
@@ -30,6 +30,9 @@ params.blobColor = 255
 # Font to write text overlay
 font = cv.FONT_HERSHEY_SIMPLEX
 
+# Constant for focal length, in pixels (must be changed per camera)
+FOCAL_LENGTH = 1460
+
 while(1):
 
     # Reading the video from the webcam in image frames
@@ -44,7 +47,7 @@ while(1):
     #cv.line(frame, (0, 0), (width, height), (255, 0, 0), 2)
     #cv.line(frame, (0, height), (width, 0), (255, 0, 0), 2)
 
-    blurframe = cv.GaussianBlur(frame, (13,13), 0)
+    blurframe = cv.GaussianBlur(frame, (15,15), 0)
     #blurframe = cv.medianBlur(frame, 9)
 
     hsvframe = cv.cvtColor(blurframe, cv.COLOR_BGR2HSV)
@@ -52,8 +55,8 @@ while(1):
     #lower = np.array([30, 40, 90]) 
     #upper = np.array([70, 255, 255]) 
 
-    lower = (16, 20, 0)
-    upper = (76, 255, 255)
+    lower = np.array([22, 40, 10]) 
+    upper = np.array([80, 255, 255])
 
     mask = cv.inRange(hsvframe, lower, upper)
     mask = cv.erode(mask, None, iterations=4)
@@ -63,6 +66,16 @@ while(1):
 
     # Set up the detector with default parameters.
     detector = cv.SimpleBlobDetector_create(params)
+
+    # Draw bounding boxes around contours
+    contours, hierarchy = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    for pic, contour in enumerate(contours):
+        area = cv.contourArea(contour)
+        if(area > 10000):
+            x, y, w, h = cv.boundingRect(contour)
+            frame = cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            text = "Target"
+            cv.putText(frame, text, (x, y), font, 1, (0, 255, 0))
 
     # Detect blobs
     keypoints = detector.detect(mask)
@@ -86,9 +99,9 @@ while(1):
 
         # Get distance of largest circle
         my_circle = sorted(keypoints, key=(lambda x: x.size), reverse=True)[0]
-        p = my_circle.size    # perceived width, in pixels
-        w = 0.31          # approx. actual width, in meters (pre-computed)
-        f = 655             # camera focal length, in pixels (pre-computed)
+        p = my_circle.size      # perceived width, in pixels
+        w = 0.31                # approx. actual width, in meters (pre-computed)
+        f = FOCAL_LENGTH        # camera focal length, in pixels (pre-computed)
         d = f * w / p
         cv.putText(frame, "Distance=%.3fm" % d, (5,200), font, 1, (0, 0, 255), 2)
 
