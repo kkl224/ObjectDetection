@@ -56,10 +56,10 @@ while(1):
     #upper = np.array([70, 255, 255]) 
 
     lower = np.array([22, 40, 10]) 
-    upper = np.array([80, 255, 255])
+    upper = np.array([60, 255, 255])
 
     mask = cv.inRange(hsvframe, lower, upper)
-    mask = cv.erode(mask, None, iterations=4)
+    mask = cv.erode(mask, None, iterations=3)
     mask = cv.dilate(mask, None, iterations=6)
 
     green = cv.bitwise_and(frame, frame, mask=mask)
@@ -83,19 +83,19 @@ while(1):
     # Get the number of blobs found
     blobCount = len(keypoints)
     text = "Count=" + str(blobCount) 
-    cv.putText(frame, text, (5,50), font, 1, (0, 0, 255), 2)
+    cv.putText(frame, text, (5,25), font, 1, (0, 0, 255), 2)
 
     if keypoints:
 
         # Write X position of first blob 
         blob_x = keypoints[0].pt[0]
         text1 = "X=" + "{:.2f}".format(blob_x )
-        cv.putText(frame, text1, (5,100), font, 1, (0, 0, 255), 2)
+        #cv.putText(frame, text1, (5,100), font, 1, (0, 0, 255), 2)
 
         # Write Y position of first blob
         blob_y = keypoints[0].pt[1]
         text2 = "Y=" + "{:.2f}".format(blob_y)
-        cv.putText(frame, text2, (5,150), font, 1, (0, 0, 255), 2)
+        #cv.putText(frame, text2, (5,150), font, 1, (0, 0, 255), 2)
 
         # Get distance of largest circle
         my_circle = sorted(keypoints, key=(lambda x: x.size), reverse=True)[0]
@@ -103,7 +103,7 @@ while(1):
         w = 0.31                # approx. actual width, in meters (pre-computed)
         f = FOCAL_LENGTH        # camera focal length, in pixels (pre-computed)
         d = f * w / p
-        cv.putText(frame, "Distance=%.3fm" % d, (5,200), font, 1, (0, 0, 255), 2)
+        #cv.putText(frame, "Distance=%.3fm" % d, (5,200), font, 1, (0, 0, 255), 2)
 
     blank = np.zeros((1, 1))
 
@@ -113,7 +113,7 @@ while(1):
 
     #plt.imshow(blobs)
     #plt.imshow(centroids)
-    cv.imshow('Green', green)
+    #cv.imshow('Green', green)
     cv.imshow('Blobs', blobs)
     cv.imshow('Mask', mask)
 

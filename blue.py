@@ -61,6 +61,16 @@ while(1):
     # Set up the detector with default parameters.
     detector = cv.SimpleBlobDetector_create(params)
 
+    # Draw bounding boxes around contours
+    contours, hierarchy = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    for pic, contour in enumerate(contours):
+        area = cv.contourArea(contour)
+        if(area > 10000):
+            x, y, w, h = cv.boundingRect(contour)
+            frame = cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            text = "Target"
+            cv.putText(frame, text, (x, y), font, 1, (0, 255, 0))
+
     # Detect blobs
     keypoints = detector.detect(mask)
 
