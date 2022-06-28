@@ -95,11 +95,13 @@ class BalloonDetector:
             detector = cv.SimpleBlobDetector_create(params)
 
             # draw bounding boxes
+            p = 1.0
             contours, hierarchy = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
             for pic, contour in enumerate(contours):
                 area = cv.contourArea(contour)
                 if(area > 10000):
                     x, y, w, h = cv.boundingRect(contour)
+                    p = w
                     frame = cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
                     if self.disp_mode:
                         text = "Target"
@@ -126,9 +128,9 @@ class BalloonDetector:
                 #cv.putText(frame, text2, (5,150), font, 1, (0, 0, 255), 2)
 
                 # Get distance of largest circle
-                max_circle = sorted(keypoints, key=(lambda x: x.size), reverse=True)[0]
+                #max_circle = sorted(keypoints, key=(lambda x: x.size), reverse=True)[0]
 
-                p = max_circle.size      # perceived width, in pixels
+                #p = max_circle.size      # perceived width, in pixels
                 w = balloon_width                # approx. actual width, in meters (pre-computed)
                 f = focal_length        # camera focal length, in pixels (pre-computed)
                 d = f * w / p
