@@ -71,7 +71,7 @@ while(1):
     contours, hierarchy = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     for pic, contour in enumerate(contours):
         area = cv.contourArea(contour)
-        if(area > 10000):
+        if (area > 10000):
             x, y, w, h = cv.boundingRect(contour)
             frame = cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             text = "Target"
