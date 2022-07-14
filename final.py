@@ -32,7 +32,7 @@ def findGreen(frame):
     hsvframe = cv.cvtColor(blurframe, cv.COLOR_BGR2HSV)
 
     lower = np.array([40, 40, 10]) 
-    upper = np.array([70, 255, 255])
+    upper = np.array([60, 255, 255])
 
     mask = cv.inRange(hsvframe, lower, upper)
     mask = cv.erode(mask, None, iterations=3)
