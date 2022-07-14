@@ -31,7 +31,7 @@ def findGreen(frame):
     blurframe = cv.GaussianBlur(frame, (15,15), 0)
     hsvframe = cv.cvtColor(blurframe, cv.COLOR_BGR2HSV)
 
-    lower = np.array([22, 40, 10]) 
+    lower = np.array([30, 40, 10]) 
     upper = np.array([60, 255, 255])
 
     mask = cv.inRange(hsvframe, lower, upper)
@@ -109,6 +109,7 @@ while(1):
 
     findGreen(frame)
 
+    # Wait for Esc key to stop
     if cv.waitKey(33) == 27:
         # De-allocate any associated memory usage
         cv.destroyAllWindows()
