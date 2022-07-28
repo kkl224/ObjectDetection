@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Capturing video through webcam
-videoCapture = cv.VideoCapture(1)
+videoCapture = cv.VideoCapture(0)
 
 # Setup SimpleBlobDetector parameters.
 params = cv.SimpleBlobDetector_Params()
