@@ -31,8 +31,10 @@ params.blobColor = 255
 font = cv.FONT_HERSHEY_SIMPLEX
 
 # Constant for focal length, in pixels (must be changed per camera)
-FOCAL_LENGTH = 700
+FOCAL_LENGTH = 1460
 BALLOON_WIDTH = 0.33
+
+i = 1
 
 while(1):
 
@@ -48,22 +50,25 @@ while(1):
     #cv.line(frame, (0, 0), (width, height), (255, 0, 0), 2)
     #cv.line(frame, (0, height), (width, 0), (255, 0, 0), 2)
 
-    blurframe = cv.GaussianBlur(frame, (15,15), 0)
+    blurframe = cv.GaussianBlur(frame, (13,13), 0)
     #blurframe = cv.medianBlur(frame, 9)
+    #cv.imshow('Blir', blurframe)
 
     hsvframe = cv.cvtColor(blurframe, cv.COLOR_BGR2HSV)
+    #cv.imshow('HSV', hsvframe)
 
     #lower = np.array([30, 40, 90])
     #upper = np.array([70, 255, 255])
 
-    lower = np.array([22, 40, 10])
+    lower = np.array([30, 40, 10])
     upper = np.array([60, 255, 255])
 
     mask = cv.inRange(hsvframe, lower, upper)
-    mask = cv.erode(mask, None, iterations=3)
+    #cv.imshow('Mask1', mask)
+    mask = cv.erode(mask, None, iterations=4)
+    #cv.imshow('Mask2', mask)
     mask = cv.dilate(mask, None, iterations=6)
-
-    green = cv.bitwise_and(frame, frame, mask=mask)
+    cv.imshow('Mask3', mask)
 
     # Set up the detector with default parameters.
     detector = cv.SimpleBlobDetector_create(params)
@@ -77,23 +82,24 @@ while(1):
             x, y, w, h = cv.boundingRect(contour)
             box_width = w
             frame = cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            text = "Target"
-            cv.putText(frame, text, (x, y), font, 1, (0, 255, 0))
+            text = "Tracking Target"
+            cv.putText(frame, text, (x, y), font, 1.2, (0, 255, 0))
 
     # Detect blobs
     keypoints = detector.detect(mask)
 
     # Get the number of blobs found
     blobCount = len(keypoints)
-    text = "Count=" + str(blobCount)
-    cv.putText(frame, text, (5,25), font, 1, (0, 0, 255), 2)
+    text = "Count = " + str(blobCount)
+    cv.putText(frame, text, (5,50), font, 2, (0, 0, 255), 2)
+    print(blobCount, "found")
 
     if box_width:
         p = box_width      # perceived width, in pixels
         w = BALLOON_WIDTH                # approx. actual width, in meters (pre-computed)
         f = FOCAL_LENGTH        # camera focal length, in pixels (pre-computed)
         d = f * w / p
-        cv.putText(frame, "Distance=%.3fm" % d, (5,50), font, 1, (0, 0, 255), 2)
+        cv.putText(frame, "Distance=%.3fm" % d, (5,100), font, 2, (0, 0, 255), 2)
 
     """
     if keypoints:
@@ -128,7 +134,7 @@ while(1):
     #plt.imshow(centroids)
     #cv.imshow('Green', green)
     cv.imshow('Blobs', blobs)
-    cv.imshow('Mask', mask)
+    #cv.imshow('Mask', mask)
 
     # Wait for Esc key to stop
     if cv.waitKey(33) == 27:

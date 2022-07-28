@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Capturing video through webcam
-videoCapture = cv.VideoCapture(1)
+videoCapture = cv.VideoCapture(0)
 
 # Setup SimpleBlobDetector parameters.
 params = cv.SimpleBlobDetector_Params()
@@ -55,11 +55,11 @@ while(1):
     #lower = np.array([30, 40, 90]) 
     #upper = np.array([70, 255, 255]) 
 
-    lower = np.array([22, 40, 10]) 
+    lower = np.array([32, 40, 10]) 
     upper = np.array([60, 255, 255])
 
     mask = cv.inRange(hsvframe, lower, upper)
-    mask = cv.erode(mask, None, iterations=3)
+    mask = cv.erode(mask, None, iterations=5)
     mask = cv.dilate(mask, None, iterations=6)
 
     green = cv.bitwise_and(frame, frame, mask=mask)
@@ -75,7 +75,10 @@ while(1):
             x, y, w, h = cv.boundingRect(contour)
             frame = cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             text = "Target"
-            cv.putText(frame, text, (x, y), font, 1, (0, 255, 0))
+            cv.putText(frame, text, (x, y), font, 2, (0, 255, 0))
+            f = FOCAL_LENGTH        # camera focal length, in pixels (pre-computed)
+            d = f * 0.33 / w
+            cv.putText(frame, "Distance=%.3fm" % d, (5,100), font, 2, (0, 0, 255), 2)
 
     # Detect blobs
     keypoints = detector.detect(mask)
@@ -83,7 +86,7 @@ while(1):
     # Get the number of blobs found
     blobCount = len(keypoints)
     text = "Count=" + str(blobCount) 
-    cv.putText(frame, text, (5,25), font, 1, (0, 0, 255), 2)
+    cv.putText(frame, text, (5,50), font, 2, (0, 0, 255), 2)
 
     if keypoints:
 
@@ -96,14 +99,6 @@ while(1):
         blob_y = keypoints[0].pt[1]
         text2 = "Y=" + "{:.2f}".format(blob_y)
         #cv.putText(frame, text2, (5,150), font, 1, (0, 0, 255), 2)
-
-        # Get distance of largest circle
-        my_circle = sorted(keypoints, key=(lambda x: x.size), reverse=True)[0]
-        p = my_circle.size      # perceived width, in pixels
-        w = 0.31                # approx. actual width, in meters (pre-computed)
-        f = FOCAL_LENGTH        # camera focal length, in pixels (pre-computed)
-        d = f * w / p
-        #cv.putText(frame, "Distance=%.3fm" % d, (5,200), font, 1, (0, 0, 255), 2)
 
     blank = np.zeros((1, 1))
 
