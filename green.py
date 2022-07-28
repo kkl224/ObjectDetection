@@ -46,6 +46,7 @@ while(1):
         break
 
     frame = cv.resize(frame, None, fx=SCALE, fy=SCALE)
+    frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB) 
 
     # get vcap property
     width  = int(videoCapture.get(3))   # int(float `width`)
