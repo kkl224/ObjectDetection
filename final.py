@@ -31,7 +31,7 @@ def findGreen(frame):
     blurframe = cv.GaussianBlur(frame, (15,15), 0)
     hsvframe = cv.cvtColor(blurframe, cv.COLOR_BGR2HSV)
 
-    lower = np.array([37, 40, 20]) 
+    lower = np.array([42, 40, 20]) 
     upper = np.array([60, 255, 255])
 
     mask = cv.inRange(hsvframe, lower, upper)
@@ -44,8 +44,8 @@ def findGreen(frame):
         if (area > 10000):
             x, y, w, h = cv.boundingRect(contour)
             frame = cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            text = "Target"
-            cv.putText(frame, text, (x, y), font, 1, (0, 255, 0))
+            text = "Tracking Target"
+            cv.putText(frame, text, (x, y), font, 1.2, (0, 255, 0))
 
     detector = cv.SimpleBlobDetector_create(params)
     keypoints = detector.detect(mask)
@@ -115,3 +115,4 @@ while(1):
         cv.destroyAllWindows()
         videoCapture.release()
         break
+ 
