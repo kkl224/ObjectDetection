@@ -34,6 +34,8 @@ font = cv.FONT_HERSHEY_SIMPLEX
 FOCAL_LENGTH = 1460
 BALLOON_WIDTH = 0.33
 
+SCALE = 0.5
+
 i = 1
 
 while(1):
@@ -42,6 +44,8 @@ while(1):
     ret, frame = videoCapture.read()
     if not ret:
         break
+
+    frame = cv.resize(frame, None, fx=SCALE, fy=SCALE)
 
     # get vcap property
     width  = int(videoCapture.get(3))   # int(float `width`)
@@ -95,9 +99,9 @@ while(1):
     print(blobCount, "found")
 
     if box_width:
-        p = box_width      # perceived width, in pixels
+        p = box_width                    # perceived width, in pixels
         w = BALLOON_WIDTH                # approx. actual width, in meters (pre-computed)
-        f = FOCAL_LENGTH        # camera focal length, in pixels (pre-computed)
+        f = FOCAL_LENGTH * SCALE         # camera focal length, in pixels (pre-computed)
         d = f * w / p
         cv.putText(frame, "Distance=%.3fm" % d, (5,100), font, 2, (0, 0, 255), 2)
 
