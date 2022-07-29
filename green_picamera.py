@@ -43,6 +43,10 @@ camera.framerate = 30
 stream = PiRGBArray(camera)
 time.sleep(0.1) # warm-up!
 
+# For this program, we tell the Pi Camera to send us a continuous stream of frames.
+# Above, we configured the camera to send us just the information we need (i.e. custom
+# resolution and framerate) which will make this code faster. The rest of the algorithm
+# is based on the file "green.py" found in this same directory.
 for f in camera.capture_continuous(stream, format='bgr', use_video_port=True):
     # grab frame from buffer
     frame = f.array
