@@ -1,29 +1,29 @@
+from picamera import PiCamera
+from picamera.array import PiRGBArray
 import cv2 as cv
 import numpy as np
-import matplotlib.pyplot as plt
-
-# Capturing video through webcam
-videoCapture = cv.VideoCapture(0)
+import time
+#import matplotlib.pyplot as plt
 
 # Setup SimpleBlobDetector parameters.
 params = cv.SimpleBlobDetector_Params()
-# Change Threshold
+
 params.minThreshold = 10
 params.maxThreshold = 220
-# Filter by Inertia Ratio
+
 params.filterByInertia = True
 params.minInertiaRatio = 0.5
-# Filter by Area
-params.filterByArea = True
+
+params.filterByArea = True              # TO-DO: retire area filtering?
 params.minArea = 500
 params.maxArea = 1000000000
-# Filter by Convexity
+
 params.filterByConvexity = True
 params.minConvexity = 0.3
-# Filter by Circularity
+
 params.filterByCircularity = True
 params.minCircularity = 0.6
-# Filter by Color
+
 params.filterByColor = True
 params.blobColor = 255
 
@@ -31,39 +31,25 @@ params.blobColor = 255
 font = cv.FONT_HERSHEY_SIMPLEX
 
 # Constant for focal length, in pixels (must be changed per camera)
-FOCAL_LENGTH = 1460
+FOCAL_LENGTH = 618
 BALLOON_WIDTH = 0.33
 
-SCALE = 0.5
+SCALE = 1.0
 
-i = 1
+# start pi camera
+camera = PiCamera()
+camera.resolution = (640,480)
+camera.framerate = 30
+stream = PiRGBArray(camera)
+time.sleep(0.1) # warm-up!
 
-while(1):
+for f in camera.capture_continuous(stream, format='bgr', use_video_port=True):
+    # grab frame from buffer
+    frame = f.array
 
-    # Reading the video from the webcam in image frames
-    ret, frame = videoCapture.read()
-    if not ret:
-        break
-
-    print(frame.shape)
-    frame = frame[0:1764,:,:]
-    frame = cv.resize(frame, None, fx=SCALE, fy=SCALE)
-    frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB) 
-
-    # get vcap property
-    width  = int(videoCapture.get(3))   # int(float `width`)
-    height = int(videoCapture.get(4))  # int(float `height`)
-    print("%d,%d" % (width, height))
-
-    #cv.line(frame, (0, 0), (width, height), (255, 0, 0), 2)
-    #cv.line(frame, (0, height), (width, 0), (255, 0, 0), 2)
-
-    blurframe = cv.GaussianBlur(frame, (13,13), 0)
-    #blurframe = cv.medianBlur(frame, 9)
-    #cv.imshow('Blir', blurframe)
-
-    hsvframe = cv.cvtColor(blurframe, cv.COLOR_BGR2HSV)
-    #cv.imshow('HSV', hsvframe)
+    # blur the frame
+    frame2 = cv.GaussianBlur(frame, (13,13), 0)
+    frame2 = cv.cvtColor(frame2, cv.COLOR_BGR2HSV)
 
     #lower = np.array([30, 40, 90])
     #upper = np.array([70, 255, 255])
@@ -71,10 +57,9 @@ while(1):
     lower = np.array([30, 40, 10])
     upper = np.array([60, 255, 255])
 
-    mask = cv.inRange(hsvframe, lower, upper)
-    #cv.imshow('Mask1', mask)
+    # erode and dilate image
+    mask = cv.inRange(frame2, lower, upper)
     mask = cv.erode(mask, None, iterations=4)
-    #cv.imshow('Mask2', mask)
     mask = cv.dilate(mask, None, iterations=6)
     cv.imshow('Mask3', mask)
 
@@ -150,3 +135,6 @@ while(1):
         cv.destroyAllWindows()
         videoCapture.release()
         break
+
+    stream.truncate()
+    stream.seek(0)

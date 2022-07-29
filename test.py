@@ -9,7 +9,7 @@ import numpy as np
 RES = (640, 480)
 camera = PiCamera()
 camera.resolution = RES
-camera.framerate = 30
+camera.framerate = 25
 rawCapture = PiRGBArray(camera, size=RES)
 
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -46,7 +46,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         blurframe = cv2.GaussianBlur(image, (15,15), 0)
         hsvframe = cv2.cvtColor(blurframe, cv2.COLOR_BGR2HSV)
 
-        lower = np.array([22, 40, 10]) 
+        lower = np.array([38, 40, 15]) 
         upper = np.array([60, 255, 255])
 
         mask = cv2.inRange(hsvframe, lower, upper)
@@ -68,6 +68,6 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	# clear the stream in preparation for the next frame
         rawCapture.truncate(0)
 	# if the `q` key was pressed, break from the loop
-        if key == ord("q"):
-	        break
+        if cv.waitKey(33) == 27:
+                break
 
